@@ -24,6 +24,7 @@ import LoadingBar from '../components/ui/LoadingBar';
 
 import { useSpaceWeather } from '../hooks/useSpaceWeather';
 import { useTimezone } from '../hooks/useTimezone';
+import SpaceWeatherMap from '../components/maps/SpaceWeatherMap';
 
 function Dashboard() {
 	const {
@@ -35,6 +36,8 @@ function Dashboard() {
 		error,
 		refresh,
 	} = useSpaceWeather();
+
+	console.log(weather);
 
 	const { timezone, setTimezone } = useTimezone();
 
@@ -67,7 +70,6 @@ function Dashboard() {
 				{/* Active Alert */}
 				<AlertBanner alert={currentAlert?.active ? currentAlert.alert : null} />
 
-				{/* Overall Risk */}
 				<div className="grid gap-6 lg:grid-cols-[1fr_1.5fr]">
 					<OverallRiskCard
 						risk={weather?.risk ?? null}
@@ -77,7 +79,6 @@ function Dashboard() {
 					<RiskDrivers factors={weather?.risk?.primary_drivers ?? []} />
 				</div>
 
-				{/* Infrastructure Risk */}
 				<div className="mt-8">
 					<InfrastructureRiskGrid
 						risks={weather?.risk?.infrastructure ?? []}
@@ -85,7 +86,6 @@ function Dashboard() {
 					/>
 				</div>
 
-				{/* Live Telemetry */}
 				<section className="mt-10">
 					<div className="mb-4">
 						<p className="text-xs font-bold tracking-widest text-slate-400">
@@ -115,7 +115,6 @@ function Dashboard() {
 					</div>
 				</section>
 
-				{/* Trend Analysis */}
 				<section className="mt-10">
 					<div className="mb-4">
 						<p className="text-xs font-bold tracking-widest text-slate-400">
@@ -132,19 +131,27 @@ function Dashboard() {
 					</div>
 
 					<div className="grid gap-6 lg:grid-cols-2">
+						{/* Kp */}
 						<KpChart data={weather?.geomagnetic?.kp_history ?? []} />
 
+						{/* Solar Wind */}
 						<SolarWindChart data={weather?.solar_wind?.history ?? []} />
 
+						{/* X-Ray */}
 						<XrayChart data={weather?.solar_activity?.xray_history ?? []} />
 
+						{/* Bz */}
 						<BzChart data={weather?.solar_wind?.bz_history ?? []} />
 
+						{/* Dst */}
 						<DstChart data={weather?.geomagnetic?.dst_history ?? []} />
 					</div>
+					<SpaceWeatherMap
+						risks={weather?.risk?.infrastructure ?? []}
+						locations={[]}
+					/>
 				</section>
 
-				{/* Alerts */}
 				<div className="mt-10">
 					<AlertList alerts={activeAlertsList} />
 				</div>

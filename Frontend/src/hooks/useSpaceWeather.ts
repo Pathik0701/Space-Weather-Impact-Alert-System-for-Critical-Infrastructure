@@ -16,10 +16,10 @@ interface UseSpaceWeatherResult {
 	weather: SpaceWeatherCurrent | null;
 	alerts: NOAAAlertsResponse | null;
 	currentAlert: CurrentAlertResponse | null;
+
 	weatherLoading: boolean;
 	alertsLoading: boolean;
 	currentAlertLoading: boolean;
-	regionalRisksLoading: boolean;
 
 	loading: boolean;
 	error: string | null;
@@ -41,8 +41,6 @@ export function useSpaceWeather(): UseSpaceWeatherResult {
 	const [alertsLoading, setAlertsLoading] = useState(true);
 
 	const [currentAlertLoading, setCurrentAlertLoading] = useState(true);
-
-	const [regionalRisksLoading, setRegionalRisksLoading] = useState(true);
 
 	const [error, setError] = useState<string | null>(null);
 
@@ -68,7 +66,6 @@ export function useSpaceWeather(): UseSpaceWeatherResult {
 		setWeatherLoading(true);
 		setAlertsLoading(true);
 		setCurrentAlertLoading(true);
-		setRegionalRisksLoading(true);
 
 		try {
 			const results = await Promise.allSettled([
@@ -104,7 +101,8 @@ export function useSpaceWeather(): UseSpaceWeatherResult {
 				);
 			}
 
-			const failed = results.some((result) => result.status === 'rejected');
+			const failed =
+				results.filter((result) => result.status === 'rejected').length > 0;
 
 			if (failed) {
 				setError('Some space-weather data could not be loaded.');
@@ -116,7 +114,6 @@ export function useSpaceWeather(): UseSpaceWeatherResult {
 				setWeatherLoading(false);
 				setAlertsLoading(false);
 				setCurrentAlertLoading(false);
-				setRegionalRisksLoading(false);
 			}
 		}
 	}, []);
@@ -152,13 +149,8 @@ export function useSpaceWeather(): UseSpaceWeatherResult {
 		weatherLoading,
 		alertsLoading,
 		currentAlertLoading,
-		regionalRisksLoading,
 
-		loading:
-			weatherLoading ||
-			alertsLoading ||
-			currentAlertLoading ||
-			regionalRisksLoading,
+		loading: weatherLoading || alertsLoading || currentAlertLoading,
 
 		error,
 

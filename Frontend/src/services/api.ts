@@ -6,12 +6,10 @@ import type {
 
 const API_BASE_URL =
 	import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
-
-const REQUEST_TIMEOUT_MS = 40_000;
+const REQUEST_TIMEOUT_MS = 20_000;
 
 async function request<T>(endpoint: string): Promise<T> {
 	const controller = new AbortController();
-
 	const timeout = window.setTimeout(
 		() => controller.abort(),
 		REQUEST_TIMEOUT_MS,
