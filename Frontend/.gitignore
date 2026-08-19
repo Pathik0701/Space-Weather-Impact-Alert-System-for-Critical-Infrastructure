@@ -7,18 +7,51 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production / Builds
+dist/
+dist-ssr/
+build/
+out/
+
+# Vite / Build tool caches
+.vite/
+.turbo/
+.nuxt/
+.next/
+
+# Environment Files (Crucial Security Fix)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+# Block specific environment types to prevent credential leaks
+.env.development
+.env.test
+.env.production
+!.env.example
+
+# TypeScript / Testing
+*.tsbuildinfo
+coverage/
+.nyc_output
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# System Files
+.DS_Store
+Thumbs.db
