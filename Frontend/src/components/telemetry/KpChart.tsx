@@ -29,7 +29,7 @@ function KpChart({ data }: Props) {
 		}));
 
 	return (
-		<div className="h-80 w-full">
+		<div className="h-80 w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
 			<ResponsiveContainer
 				width="100%"
 				height="100%"

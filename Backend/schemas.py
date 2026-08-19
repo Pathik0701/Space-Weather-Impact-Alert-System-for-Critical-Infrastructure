@@ -2,7 +2,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from models.risk_models import SpaceWeatherRisk
+from models.risk import SpaceWeatherRisk
 
 
 class DataPoint(BaseModel):

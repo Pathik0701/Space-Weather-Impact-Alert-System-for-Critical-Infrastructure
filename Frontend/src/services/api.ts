@@ -1,16 +1,17 @@
 import type {
 	CurrentAlertResponse,
 	NOAAAlertsResponse,
-	RegionalRiskResponse,
 	SpaceWeatherCurrent,
 } from '../types/spaceWeather';
 
 const API_BASE_URL =
 	import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
-const REQUEST_TIMEOUT_MS = 20_000;
+
+const REQUEST_TIMEOUT_MS = 40_000;
 
 async function request<T>(endpoint: string): Promise<T> {
 	const controller = new AbortController();
+
 	const timeout = window.setTimeout(
 		() => controller.abort(),
 		REQUEST_TIMEOUT_MS,
@@ -19,13 +20,16 @@ async function request<T>(endpoint: string): Promise<T> {
 	try {
 		const response = await fetch(`${API_BASE_URL}${endpoint}`, {
 			signal: controller.signal,
+			headers: {
+				Accept: 'application/json',
+			},
 		});
 
 		if (!response.ok) {
 			throw new Error(`API request failed: ${response.status}`);
 		}
 
-		return response.json();
+		return await response.json();
 	} finally {
 		window.clearTimeout(timeout);
 	}
@@ -49,12 +53,6 @@ export function getWeatherHistory(hours = 24) {
 
 export function getForecast() {
 	return request('/api/weather/forecast');
-}
-
-export function getRegionalRisk(latitude: number, longitude: number) {
-	return request<RegionalRiskResponse>(
-		`/api/risk/regional?latitude=${latitude}&longitude=${longitude}`,
-	);
 }
 
 export function getAurora() {

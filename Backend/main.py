@@ -32,7 +32,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 app.include_router(weather.router)
 
 app.include_router(risk.router)

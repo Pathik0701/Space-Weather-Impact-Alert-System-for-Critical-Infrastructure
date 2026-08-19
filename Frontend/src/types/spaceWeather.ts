@@ -169,37 +169,3 @@ export interface CurrentAlertResponse {
 	active: boolean;
 	alert: NOAAAlert | null;
 }
-
-/* =========================
-   REGIONAL RISK
-========================= */
-
-export interface RegionalRiskResponse {
-	location: {
-		latitude: number;
-		longitude: number;
-	};
-
-	note: string;
-
-	infrastructure: Array<
-		InfrastructureRisk & {
-			latitude_modifier: number;
-		}
-	>;
-}
-
-export interface RegionalRisk {
-	latitude: number;
-	longitude: number;
-
-	infrastructure: InfrastructureType;
-
-	score: number;
-	level: RiskLevel;
-	confidence: number;
-}
-
-export interface RegionalRiskResponse {
-	locations: RegionalRisk[];
-}

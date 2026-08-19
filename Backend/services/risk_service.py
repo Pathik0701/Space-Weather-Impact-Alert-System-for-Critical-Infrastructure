@@ -1,6 +1,6 @@
 from typing import Any
 
-from models.risk_models import (
+from models.risk import (
     InfrastructureRisk,
     InfrastructureType,
     RiskFactor,
