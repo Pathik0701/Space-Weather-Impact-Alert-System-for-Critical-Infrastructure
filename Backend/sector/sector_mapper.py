@@ -1,4 +1,4 @@
-from models.risk_models import InfrastructureRisk, SpaceWeatherRisk
+from models.risk import InfrastructureRisk, SpaceWeatherRisk
 from sector.sector_data import get_sector_impact
 
 SECTOR_LABELS = {

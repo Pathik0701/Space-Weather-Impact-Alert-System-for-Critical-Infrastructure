@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 from replay.replay_service import list_events, run_replay
 from sector.sector_mapper import build_sector_cards
 from services.alert_service import check_and_trigger
-from models.risk_models import SpaceWeatherRisk
+from models.risk import SpaceWeatherRisk
 
 router = APIRouter(
     prefix="/api/replay",

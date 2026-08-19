@@ -11,7 +11,7 @@ and R-scale (radio blackout) descriptions:
 https://www.swpc.noaa.gov/noaa-scales-explanation
 """
 
-from models.risk_models import InfrastructureType, RiskLevel
+from models.risk import InfrastructureType, RiskLevel
 
 # risk_service.py's RiskLevel is a 5-tier scale (NORMAL, WATCH,
 # ADVISORY, WARNING, CRITICAL). This maps roughly onto the brief's
@@ -110,5 +110,7 @@ SECTOR_IMPACT_TABLE: dict[InfrastructureType, dict[RiskLevel, dict[str, str]]] =
 }
 
 
-def get_sector_impact(infrastructure: InfrastructureType, level: RiskLevel) -> dict[str, str]:
+def get_sector_impact(
+    infrastructure: InfrastructureType, level: RiskLevel
+) -> dict[str, str]:
     return SECTOR_IMPACT_TABLE[infrastructure][level]
