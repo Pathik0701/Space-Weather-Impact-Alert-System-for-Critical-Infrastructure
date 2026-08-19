@@ -1,7 +1,7 @@
 from typing import Any
 
 import database
-from models.risk_models import RiskLevel, SpaceWeatherRisk
+from models.risk import RiskLevel, SpaceWeatherRisk
 from services.noaa_service import noaa_service
 
 ALERTS_URL = "/products/alerts.json"
