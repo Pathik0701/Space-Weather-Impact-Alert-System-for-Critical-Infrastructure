@@ -9,7 +9,9 @@ export type InfrastructureType =
 	| 'power_grid'
 	| 'gnss'
 	| 'telecommunications'
-	| 'satellites';
+	| 'satellites'
+	| 'aviation'
+	| 'railways';
 
 /* =========================
    RISK

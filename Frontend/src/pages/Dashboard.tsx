@@ -16,8 +16,8 @@ import KpChart from '../components/telemetry/KpChart';
 import SolarActivityCard from '../components/telemetry/SolarActivityCard';
 import SolarWindCard from '../components/telemetry/SolarWindCard';
 import SolarWindChart from '../components/telemetry/SolarWindChart';
-import XrayChart from '../components/telemetry/XrayChart';
-import BzChart from '../components/telemetry/BzChart';
+// import XrayChart from '../components/telemetry/XrayChart';
+// import BzChart from '../components/telemetry/BzChart';
 import DstChart from '../components/telemetry/DstChart';
 
 import LoadingBar from '../components/ui/LoadingBar';
@@ -93,9 +93,7 @@ function Dashboard() {
 
 						{/* Primary Risk Drivers */}
 						<div className="xl:col-span-7">
-							<RiskDrivers
-								factors={weather?.risk?.primary_drivers ?? []}
-							/>
+							<RiskDrivers factors={weather?.risk?.primary_drivers ?? []} />
 						</div>
 					</div>
 				</section>
@@ -144,8 +142,8 @@ function Dashboard() {
 						</h2>
 
 						<p className="mt-1 max-w-2xl text-sm text-slate-500">
-							Current measurements from geomagnetic, solar wind,
-							and solar activity data.
+							Current measurements from geomagnetic, solar wind, and solar
+							activity data.
 						</p>
 					</div>
 
@@ -186,25 +184,19 @@ function Dashboard() {
 					</div>
 
 					<div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-						<KpChart
-							data={weather?.geomagnetic?.kp_history ?? []}
-						/>
+						<KpChart data={weather?.geomagnetic?.kp_history ?? []} />
 
-						<SolarWindChart
-							data={weather?.solar_wind?.history ?? []}
-						/>
-
+						<SolarWindChart data={weather?.solar_wind?.history ?? []} />
+						{/* 
 						<XrayChart
 							data={weather?.solar_activity?.xray_history ?? []}
 						/>
 
 						<BzChart
 							data={weather?.solar_wind?.bz_history ?? []}
-						/>
+						/> */}
 
-						<DstChart
-							data={weather?.geomagnetic?.dst_history ?? []}
-						/>
+						<DstChart data={weather?.geomagnetic?.dst_history ?? []} />
 					</div>
 				</section>
 
@@ -222,8 +214,8 @@ function Dashboard() {
 						</h2>
 
 						<p className="mt-1 max-w-2xl text-sm text-slate-500">
-							Geographic view of current infrastructure risk
-							and space-weather impact.
+							Geographic view of current infrastructure risk and space-weather
+							impact.
 						</p>
 					</div>
 
@@ -247,8 +239,8 @@ function Dashboard() {
 						</h2>
 
 						<p className="mt-1 max-w-2xl text-sm text-slate-500">
-							Recent warnings and notifications received from
-							the space-weather monitoring system.
+							Recent warnings and notifications received from the space-weather
+							monitoring system.
 						</p>
 					</div>
 
@@ -260,13 +252,9 @@ function Dashboard() {
 				===================================================== */}
 				<footer className="mt-14 border-t border-slate-200 pt-5">
 					<div className="flex flex-col justify-between gap-2 text-[10px] text-slate-400 sm:flex-row">
-						<span>
-							Space Weather Impact Alert System
-						</span>
+						<span>Space Weather Impact Alert System</span>
 
-						<span>
-							NOAA Space Weather Data • SWIAS v1.0
-						</span>
+						<span>NOAA Space Weather Data • SWIAS v1.0</span>
 					</div>
 				</footer>
 			</div>
