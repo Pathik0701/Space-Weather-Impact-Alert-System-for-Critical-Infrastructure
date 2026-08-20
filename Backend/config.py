@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     request_timeout: float
     cache_ttl: int
 
-    cors_origins: str
+    cors_origins: str = "http://localhost:5173"
 
     server_host: str
     server_port: int
