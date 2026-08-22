@@ -21,10 +21,16 @@ class Settings(BaseSettings):
     server_port: int
     server_reload: bool
 
-    environment: str
+    # Environment
+    environment: str = "development"
 
-    # AI
-    ai_model: str
+    # Local Ollama
+    ai_model: str = "llama3.2"
+
+    # Ollama Cloud / MiniMax
+    minimax_api_key: str | None = None
+    minimax_model: str = "minimax-m2"
+    ollama_cloud_url: str = "https://ollama.com"
 
     model_config = SettingsConfigDict(
         env_file=BASE_DIR / ".env",

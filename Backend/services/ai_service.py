@@ -4,9 +4,7 @@ from langchain_core.messages import (
     SystemMessage,
     ToolMessage,
 )
-
 from langchain_ollama import ChatOllama
-from langchain_openai import ChatOpenAI
 
 from ai.prompt import SYSTEM_PROMPT
 from ai.tools import (
@@ -34,24 +32,46 @@ TOOL_MAP = {tool.name: tool for tool in TOOLS}
 # LLM configuration
 
 
-def create_llm():
+def create_llm() -> ChatOllama:
     """
-    Create the appropriate chat model based on the environment.
+    Create the appropriate Ollama model based on the environment.
 
     Development:
-        ChatOllama -> local Ollama instance
+        Local Ollama
+        Example: http://localhost:11434
 
     Production:
-        ChatOpenAI -> OpenAI API
+        Ollama Cloud
+        MiniMax model
+        Uses MINIMAX_API_KEY
     """
 
-    if settings.environment == "production":
-        return ChatOpenAI(
-            model=settings.openai_model,
-            api_key=settings.openai_api_key,
+    if settings.environment.lower() == "production":
+        return ChatOllama(
+            model=settings.minimax_model,
+            base_url=settings.ollama_cloud_url,
+            client_kwargs={
+                "headers": {
+                    "Authorization": f"Bearer {settings.minimax_api_key}",
+                }
+            },
             temperature=0,
         )
 
+    # ChatOpneAI
+
+    # Production:
+    #         ChatOpenAI -> OpenAI API
+    #     """
+
+    #     if settings.environment == "production":
+    #         return ChatOpenAI(
+    #             model=settings.openai_model,
+    #             api_key=settings.openai_api_key,
+    #             temperature=0,
+    #         )
+
+    # Development
     return ChatOllama(
         model=settings.ai_model,
         temperature=0,
@@ -60,7 +80,9 @@ def create_llm():
 
 llm = create_llm()
 
-# Bind the same tools regardless of the selected provider.
+
+# Bind tools
+
 llm_with_tools = llm.bind_tools(TOOLS)
 
 
@@ -76,8 +98,11 @@ async def chat(
         SystemMessage(content=SYSTEM_PROMPT),
     ]
 
+    # Restore previous conversation
+
     if history:
         for item in history:
+
             role = item.get("role")
             content = item.get("content", "")
 
@@ -90,9 +115,15 @@ async def chat(
             elif role == "assistant":
                 messages.append(AIMessage(content=content))
 
+    # Current user message
+
     messages.append(HumanMessage(content=message))
 
+    # Initial LLM call
+
     response = await llm_with_tools.ainvoke(messages)
+
+    # Tool-calling loop
 
     while response.tool_calls:
 
@@ -125,6 +156,10 @@ async def chat(
                 )
             )
 
+        # Send tool results back to the model
+
         response = await llm_with_tools.ainvoke(messages)
+
+    # Final response
 
     return response.content
