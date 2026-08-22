@@ -14,8 +14,6 @@ import KpChart from '../components/telemetry/KpChart';
 import SolarActivityCard from '../components/telemetry/SolarActivityCard';
 import SolarWindCard from '../components/telemetry/SolarWindCard';
 import SolarWindChart from '../components/telemetry/SolarWindChart';
-// import XrayChart from '../components/telemetry/XrayChart';
-// import BzChart from '../components/telemetry/BzChart';
 import DstChart from '../components/telemetry/DstChart';
 import LoadingBar from '../components/ui/LoadingBar';
 
@@ -177,14 +175,6 @@ function Dashboard() {
 						<KpChart data={weather?.geomagnetic?.kp_history ?? []} />
 
 						<SolarWindChart data={weather?.solar_wind?.history ?? []} />
-						{/* 
-						<XrayChart
-							data={weather?.solar_activity?.xray_history ?? []}
-						/>
-
-						<BzChart
-							data={weather?.solar_wind?.bz_history ?? []}
-						/> */}
 
 						<DstChart data={weather?.geomagnetic?.dst_history ?? []} />
 					</div>
