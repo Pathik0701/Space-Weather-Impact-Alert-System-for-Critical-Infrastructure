@@ -1,6 +1,5 @@
 from typing import Any
 
-import database
 from models.risk import RiskLevel, SpaceWeatherRisk
 from services.noaa_service import noaa_service
 
@@ -26,13 +25,6 @@ def check_and_trigger(risk: SpaceWeatherRisk, source: str = "live") -> dict | No
         f"Space weather risk is {risk.overall_level.value.upper()} "
         f"(score {risk.overall_score}/100). Check sector impact cards "
         f"for recommended actions."
-    )
-
-    database.log_alert(
-        overall_level=risk.overall_level.value,
-        overall_score=risk.overall_score,
-        message=message,
-        source=source,
     )
 
     return {

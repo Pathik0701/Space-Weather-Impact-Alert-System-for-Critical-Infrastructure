@@ -5,7 +5,6 @@ from routers import ai
 
 from routers import map
 
-import database
 from config import settings
 
 from routers import (
@@ -49,14 +48,6 @@ app.include_router(health.router)
 app.include_router(ai.router)
 
 app.include_router(map.router)
-
-
-database.init_db()
-
-
-@app.on_event("startup")
-async def on_startup():
-    database.init_db()
 
 
 @app.get("/")

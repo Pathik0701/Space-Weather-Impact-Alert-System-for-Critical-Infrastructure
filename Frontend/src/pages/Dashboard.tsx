@@ -184,11 +184,7 @@ function Dashboard() {
 				<section className="mt-12">
 					<SpaceWeatherMap
 						risks={weather?.risk?.infrastructure ?? []}
-<<<<<<< HEAD
-						kp={weather?.geomagnetic?.kp ?? null}
-=======
 						mapData={mapData}
->>>>>>> 39cafe3 (feat: integrate AI assistant for space weather queries and add aurora map functionality)
 					/>
 				</section>
 
