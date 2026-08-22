@@ -1,4 +1,6 @@
 import type {
+	AIChatRequest,
+	AuroraMapResponse,
 	CurrentAlertResponse,
 	NOAAAlertsResponse,
 	SpaceWeatherCurrent,
@@ -6,10 +8,12 @@ import type {
 
 const API_BASE_URL =
 	import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+
 const REQUEST_TIMEOUT_MS = 20_000;
 
-async function request<T>(endpoint: string): Promise<T> {
+async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
 	const controller = new AbortController();
+
 	const timeout = window.setTimeout(
 		() => controller.abort(),
 		REQUEST_TIMEOUT_MS,
@@ -17,9 +21,11 @@ async function request<T>(endpoint: string): Promise<T> {
 
 	try {
 		const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+			...options,
 			signal: controller.signal,
 			headers: {
-				Accept: 'application/json',
+				'Content-Type': 'application/json',
+				...(options?.headers ?? {}),
 			},
 		});
 
@@ -27,7 +33,7 @@ async function request<T>(endpoint: string): Promise<T> {
 			throw new Error(`API request failed: ${response.status}`);
 		}
 
-		return await response.json();
+		return response.json();
 	} finally {
 		window.clearTimeout(timeout);
 	}
@@ -55,4 +61,33 @@ export function getForecast() {
 
 export function getAurora() {
 	return request('/api/geospace/aurora');
+}
+
+/* -------------------------------------------------------------------------- */
+/* Aurora / Leaflet Map                                                       */
+/* -------------------------------------------------------------------------- */
+
+export function getAuroraMap() {
+	return request<AuroraMapResponse>('/api/map/aurora');
+}
+
+/* -------------------------------------------------------------------------- */
+/* AI Chat                                                                    */
+/* -------------------------------------------------------------------------- */
+
+export interface AIChatResponse {
+	answer: string;
+}
+
+export function chatWithAI(
+	message: string,
+	history: AIChatRequest['history'] = [],
+) {
+	return request<AIChatResponse>('/api/ai/chat', {
+		method: 'POST',
+		body: JSON.stringify({
+			message,
+			history,
+		}),
+	});
 }

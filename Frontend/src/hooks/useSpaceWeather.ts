@@ -4,31 +4,36 @@ import {
 	getCurrentAlert,
 	getNOAAAlerts,
 	getSpaceWeather,
+	getAuroraMap,
 } from '../services/api';
 
 import type {
 	CurrentAlertResponse,
 	NOAAAlertsResponse,
 	SpaceWeatherCurrent,
+	AuroraMapResponse,
 } from '../types/spaceWeather';
 
 interface UseSpaceWeatherResult {
 	weather: SpaceWeatherCurrent | null;
+	mapData: AuroraMapResponse | null;
 	alerts: NOAAAlertsResponse | null;
 	currentAlert: CurrentAlertResponse | null;
 
 	weatherLoading: boolean;
+	mapLoading: boolean;
 	alertsLoading: boolean;
 	currentAlertLoading: boolean;
 
 	loading: boolean;
 	error: string | null;
-
 	refresh: () => Promise<void>;
 }
 
 export function useSpaceWeather(): UseSpaceWeatherResult {
 	const [weather, setWeather] = useState<SpaceWeatherCurrent | null>(null);
+
+	const [mapData, setMapData] = useState<AuroraMapResponse | null>(null);
 
 	const [alerts, setAlerts] = useState<NOAAAlertsResponse | null>(null);
 
@@ -37,9 +42,8 @@ export function useSpaceWeather(): UseSpaceWeatherResult {
 	);
 
 	const [weatherLoading, setWeatherLoading] = useState(true);
-
+	const [mapLoading, setMapLoading] = useState(true);
 	const [alertsLoading, setAlertsLoading] = useState(true);
-
 	const [currentAlertLoading, setCurrentAlertLoading] = useState(true);
 
 	const [error, setError] = useState<string | null>(null);
@@ -61,15 +65,17 @@ export function useSpaceWeather(): UseSpaceWeatherResult {
 		}
 
 		refreshInFlight.current = true;
-		setError(null);
 
+		setError(null);
 		setWeatherLoading(true);
+		setMapLoading(true);
 		setAlertsLoading(true);
 		setCurrentAlertLoading(true);
 
 		try {
 			const results = await Promise.allSettled([
 				getSpaceWeather(),
+				getAuroraMap(),
 				getNOAAAlerts(),
 				getCurrentAlert(),
 			]);
@@ -78,20 +84,31 @@ export function useSpaceWeather(): UseSpaceWeatherResult {
 				return;
 			}
 
-			const [weatherResult, alertsResult, currentAlertResult] = results;
+			const [weatherResult, mapResult, alertsResult, currentAlertResult] =
+				results;
 
+			// Weather
 			if (weatherResult.status === 'fulfilled') {
 				setWeather(weatherResult.value);
 			} else {
 				console.error('Weather request failed:', weatherResult.reason);
 			}
 
+			// Aurora map
+			if (mapResult.status === 'fulfilled') {
+				setMapData(mapResult.value);
+			} else {
+				console.error('Aurora map request failed:', mapResult.reason);
+			}
+
+			// NOAA alerts
 			if (alertsResult.status === 'fulfilled') {
 				setAlerts(alertsResult.value);
 			} else {
 				console.error('Alerts request failed:', alertsResult.reason);
 			}
 
+			// Current alert
 			if (currentAlertResult.status === 'fulfilled') {
 				setCurrentAlert(currentAlertResult.value);
 			} else {
@@ -101,8 +118,7 @@ export function useSpaceWeather(): UseSpaceWeatherResult {
 				);
 			}
 
-			const failed =
-				results.filter((result) => result.status === 'rejected').length > 0;
+			const failed = results.some((result) => result.status === 'rejected');
 
 			if (failed) {
 				setError('Some space-weather data could not be loaded.');
@@ -112,6 +128,7 @@ export function useSpaceWeather(): UseSpaceWeatherResult {
 
 			if (mounted.current) {
 				setWeatherLoading(false);
+				setMapLoading(false);
 				setAlertsLoading(false);
 				setCurrentAlertLoading(false);
 			}
@@ -143,17 +160,16 @@ export function useSpaceWeather(): UseSpaceWeatherResult {
 
 	return {
 		weather,
+		mapData,
 		alerts,
 		currentAlert,
-
 		weatherLoading,
+		mapLoading,
 		alertsLoading,
 		currentAlertLoading,
-
-		loading: weatherLoading || alertsLoading || currentAlertLoading,
-
+		loading:
+			weatherLoading || mapLoading || alertsLoading || currentAlertLoading,
 		error,
-
 		refresh,
 	};
 }

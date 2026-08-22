@@ -1,25 +1,20 @@
 import { useEffect } from 'react';
+
 import { toast } from '../components/ui/toast';
 
 import AlertBanner from '../components/alerts/AlertBanner';
 import AlertList from '../components/alerts/AlertList';
-
 import InfrastructureRiskGrid from '../components/dashboard/InfrastructureRiskGrid';
 import OverallRiskCard from '../components/dashboard/OverallRiskCard';
 import RiskDrivers from '../components/dashboard/RiskDrivers';
-
 import DashboardHeader from '../components/layout/DashboardHeader';
 import DashboardLayout from '../components/layout/DashboardLayout';
-
 import GeomagneticCard from '../components/telemetry/GeomagneticCard';
 import KpChart from '../components/telemetry/KpChart';
 import SolarActivityCard from '../components/telemetry/SolarActivityCard';
 import SolarWindCard from '../components/telemetry/SolarWindCard';
 import SolarWindChart from '../components/telemetry/SolarWindChart';
-// import XrayChart from '../components/telemetry/XrayChart';
-// import BzChart from '../components/telemetry/BzChart';
 import DstChart from '../components/telemetry/DstChart';
-
 import LoadingBar from '../components/ui/LoadingBar';
 
 import { useSpaceWeather } from '../hooks/useSpaceWeather';
@@ -27,9 +22,15 @@ import { useTimezone } from '../hooks/useTimezone';
 
 import SpaceWeatherMap from '../components/maps/SpaceWeatherMap';
 
+// AI assistant
+import AIAssistantButton from '../components/ai/AIAssistantButton';
+
+import Footer from '../components/Footer';
+
 function Dashboard() {
 	const {
 		weather,
+		mapData,
 		currentAlert,
 		alerts,
 		loading,
@@ -56,11 +57,10 @@ function Dashboard() {
 	return (
 		<DashboardLayout>
 			<div className="relative">
+				{/* Loading bar */}
 				<LoadingBar show={loading} />
 
-				{/* =====================================================
-				    HEADER
-				===================================================== */}
+				{/* Dashboard header */}
 				<DashboardHeader
 					lastUpdated={weather?.timestamp}
 					onRefresh={refresh}
@@ -69,21 +69,16 @@ function Dashboard() {
 					setTimezone={setTimezone}
 				/>
 
-				{/* =====================================================
-				    ACTIVE NOAA ALERT
-				===================================================== */}
+				{/* Current alert banner */}
 				<div className="mt-6">
 					<AlertBanner
 						alert={currentAlert?.active ? currentAlert.alert : null}
 					/>
 				</div>
 
-				{/* =====================================================
-				    RISK OVERVIEW
-				===================================================== */}
+				{/* Overall risk card with risk drivers */}
 				<section className="mt-6">
 					<div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-12">
-						{/* Overall Risk */}
 						<div className="xl:col-span-5">
 							<OverallRiskCard
 								risk={weather?.risk ?? null}
@@ -91,16 +86,13 @@ function Dashboard() {
 							/>
 						</div>
 
-						{/* Primary Risk Drivers */}
 						<div className="xl:col-span-7">
 							<RiskDrivers factors={weather?.risk?.primary_drivers ?? []} />
 						</div>
 					</div>
 				</section>
 
-				{/* =====================================================
-				    CRITICAL INFRASTRUCTURE
-				===================================================== */}
+				{/* Infrastructure risk grid */}
 				<section className="mt-10">
 					<div className="mb-5 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
 						<div>
@@ -118,7 +110,7 @@ function Dashboard() {
 						</div>
 
 						<div className="text-xs font-semibold text-slate-400">
-							4 sectors monitored
+							{weather?.risk?.infrastructure?.length ?? 0} sectors monitored
 						</div>
 					</div>
 
@@ -128,9 +120,7 @@ function Dashboard() {
 					/>
 				</section>
 
-				{/* =====================================================
-				    LIVE TELEMETRY
-				===================================================== */}
+				{/* Live telemetry */}
 				<section className="mt-12">
 					<div className="mb-5">
 						<p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
@@ -165,9 +155,7 @@ function Dashboard() {
 					</div>
 				</section>
 
-				{/* =====================================================
-				    TREND ANALYSIS
-				===================================================== */}
+				{/* Trend analysis charts */}
 				<section className="mt-12">
 					<div className="mb-5">
 						<p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
@@ -187,76 +175,33 @@ function Dashboard() {
 						<KpChart data={weather?.geomagnetic?.kp_history ?? []} />
 
 						<SolarWindChart data={weather?.solar_wind?.history ?? []} />
-						{/* 
-						<XrayChart
-							data={weather?.solar_activity?.xray_history ?? []}
-						/>
-
-						<BzChart
-							data={weather?.solar_wind?.bz_history ?? []}
-						/> */}
 
 						<DstChart data={weather?.geomagnetic?.dst_history ?? []} />
 					</div>
 				</section>
 
-				{/* =====================================================
-				    SPACE WEATHER MAP
-				===================================================== */}
+				{/* Space weather map */}
 				<section className="mt-12">
-					<div className="mb-5">
-						<p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
-							Geospatial Monitoring
-						</p>
-
-						<h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950">
-							Space Weather Impact Map
-						</h2>
-
-						<p className="mt-1 max-w-2xl text-sm text-slate-500">
-							Geographic view of current infrastructure risk and space-weather
-							impact.
-						</p>
-					</div>
-
 					<SpaceWeatherMap
 						risks={weather?.risk?.infrastructure ?? []}
+<<<<<<< HEAD
 						kp={weather?.geomagnetic?.kp ?? null}
+=======
+						mapData={mapData}
+>>>>>>> 39cafe3 (feat: integrate AI assistant for space weather queries and add aurora map functionality)
 					/>
 				</section>
 
-				{/* =====================================================
-				    ALERT HISTORY
-				===================================================== */}
+				{/* AI assistant */}
+				<AIAssistantButton />
+
+				{/* All alerts list */}
 				<section className="mt-12">
-					<div className="mb-5">
-						<p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
-							Alert Center
-						</p>
-
-						<h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950">
-							Recent Space Weather Alerts
-						</h2>
-
-						<p className="mt-1 max-w-2xl text-sm text-slate-500">
-							Recent warnings and notifications received from the space-weather
-							monitoring system.
-						</p>
-					</div>
-
 					<AlertList alerts={activeAlertsList} />
 				</section>
 
-				{/* =====================================================
-				    FOOTER
-				===================================================== */}
-				<footer className="mt-14 border-t border-slate-200 pt-5">
-					<div className="flex flex-col justify-between gap-2 text-[10px] text-slate-400 sm:flex-row">
-						<span>Space Weather Impact Alert System</span>
-
-						<span>NOAA Space Weather Data • SWIAS v1.0</span>
-					</div>
-				</footer>
+				{/* Footer */}
+				<Footer />
 			</div>
 		</DashboardLayout>
 	);

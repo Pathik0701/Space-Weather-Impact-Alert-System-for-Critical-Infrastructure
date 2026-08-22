@@ -171,3 +171,32 @@ export interface CurrentAlertResponse {
 	active: boolean;
 	alert: NOAAAlert | null;
 }
+
+// AI types
+export interface AIChatHistoryItem {
+	role: 'user' | 'assistant';
+	content: string;
+}
+
+export interface AIChatRequest {
+	message: string;
+	history?: AIChatHistoryItem[];
+}
+
+export interface AIChatResponse {
+	answer: string;
+}
+
+export interface AuroraPoint {
+	latitude: number;
+	longitude: number;
+	value: number;
+}
+
+export interface AuroraMapResponse {
+	observation_time: string | null;
+	forecast_time: string | null;
+	points: AuroraPoint[];
+	min_value: number;
+	max_value: number;
+}
