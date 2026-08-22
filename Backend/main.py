@@ -1,6 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from routers import ai
+
+from routers import map
 
 import database
 from config import settings
@@ -9,9 +12,8 @@ from routers import (
     alerts,
     geospace,
     health,
-    replay,
+    map as map_router,
     risk,
-    sectors,
     weather,
 )
 
@@ -40,11 +42,13 @@ app.include_router(alerts.router)
 
 app.include_router(geospace.router)
 
+app.include_router(map_router.router)
+
 app.include_router(health.router)
 
-app.include_router(sectors.router)
+app.include_router(ai.router)
 
-app.include_router(replay.router)
+app.include_router(map.router)
 
 
 database.init_db()

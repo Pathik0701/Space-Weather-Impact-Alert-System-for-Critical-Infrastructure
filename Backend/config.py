@@ -21,6 +21,11 @@ class Settings(BaseSettings):
     server_port: int
     server_reload: bool
 
+    environment: str
+
+    # AI
+    ai_model: str
+
     model_config = SettingsConfigDict(
         env_file=BASE_DIR / ".env",
         extra="ignore",
