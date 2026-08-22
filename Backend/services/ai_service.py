@@ -48,11 +48,11 @@ def create_llm() -> ChatOllama:
 
     if settings.environment.lower() == "production":
         return ChatOllama(
-            model=settings.minimax_model,
+            model=settings.ollama_model,
             base_url=settings.ollama_cloud_url,
             client_kwargs={
                 "headers": {
-                    "Authorization": f"Bearer {settings.minimax_api_key}",
+                    "Authorization": f"Bearer {settings.ollama_api_key}",
                 }
             },
             temperature=0,

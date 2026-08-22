@@ -28,8 +28,8 @@ class Settings(BaseSettings):
     ai_model: str = "llama3.2"
 
     # Ollama Cloud / MiniMax
-    minimax_api_key: str | None = None
-    minimax_model: str = "minimax-m2"
+    ollama_api_key: str | None = None
+    ollama_model: str = "minimax-m2"
     ollama_cloud_url: str = "https://ollama.com"
 
     model_config = SettingsConfigDict(
